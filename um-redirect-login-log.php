@@ -118,7 +118,7 @@ function redirect_login_log_shortcode( $atts ) {
             $log = array_reverse( $log );
 
             echo '<div style="display: table-row;">';
-            echo '<div style="display: table-cell;">' . __( 'Date', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell;">' . __( 'Time', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'ID', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'User', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Status', 'ultimate-member' ) . '</div>';
@@ -128,7 +128,7 @@ function redirect_login_log_shortcode( $atts ) {
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'WP roles', 'ultimate-member' ) . '</div>';
             echo '</div>';
 
-            $time_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+            $time_format = get_option( 'time_format' );
 
             foreach( $log as $items ) {
 
