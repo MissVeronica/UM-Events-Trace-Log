@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Redirect Login Log
  * Description:     Extension to Ultimate Member for logging all redirects during login.
- * Version:         1.0.0
+ * Version:         1.1.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -26,54 +26,53 @@ function um_user_login_trace( $args ) {
 
     extract( $args );
 
-	$rememberme = ( isset( $args['rememberme'] ) && 1 == $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
+    $rememberme = ( isset( $args['rememberme'] ) && 1 == $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
 
-	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
-		wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
-	}
+    if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
+        wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
+    }
 
-	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
+    UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
 
-	do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
+    do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
 
-	// Priority redirect
-	if ( ! empty( $args['redirect_to']  ) ) {
+    // Priority redirect
+    if ( ! empty( $args['redirect_to']  ) ) {
         my_um_redirect_login_log( 'Priority redirect', $args['redirect_to'] );
         exit( wp_safe_redirect( $args['redirect_to'] ) );
-	}
+    }
 
-	// Role redirect
-	$after_login = um_user( 'after_login' );
-	if ( empty( $after_login ) ) {
+    // Role redirect
+    $after_login = um_user( 'after_login' );
+    if ( empty( $after_login ) ) {
         my_um_redirect_login_log( 'Role redirect', um_user_profile_url() );
-		exit( wp_redirect( um_user_profile_url() ) );
-	}
+        exit( wp_redirect( um_user_profile_url() ) );
+    }
 
-	switch ( $after_login ) {
+    switch ( $after_login ) {
 
-		case 'redirect_admin':
+        case 'redirect_admin':
             my_um_redirect_login_log( 'redirect_admin', admin_url() );
             exit( wp_redirect( admin_url() ) );
-			break;
+            break;
 
-		case 'redirect_url':
+        case 'redirect_url':
             my_um_redirect_login_log( 'redirect_url filter in', um_user( 'login_redirect_url' ) );
-			$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
-			my_um_redirect_login_log( 'redirect_url filter out', $redirect_url );
+            $redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
+            my_um_redirect_login_log( 'redirect_url filter out', $redirect_url );
             exit( wp_redirect( $redirect_url ) );
-			break;
+            break;
 
-		case 'refresh':
+        case 'refresh':
             my_um_redirect_login_log( 'refresh', UM()->permalinks()->get_current_url() );
             exit( wp_redirect( UM()->permalinks()->get_current_url() ) );
-			break;
+            break;
 
-		case 'redirect_profile':
-		default:
+        case 'redirect_profile':
+        default:
             my_um_redirect_login_log( $after_login, um_user_profile_url() );
             exit( wp_redirect( um_user_profile_url() ) );
-			break;
-
+            break;
 	}
 }
 
@@ -111,7 +110,7 @@ function redirect_login_log_shortcode( $atts ) {
         $log = get_option( 'um_redirect_login_log' );
 
         ob_start();
-        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.0', 'ultimate-member' ) . '</h4>';
+        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.1', 'ultimate-member' ) . '</h4>';
         
         if( !empty( $log )) {
 
