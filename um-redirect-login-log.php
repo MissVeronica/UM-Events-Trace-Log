@@ -111,7 +111,7 @@ function redirect_login_log_shortcode( $atts ) {
         $log = get_option( 'um_redirect_login_log' );
 
         ob_start();
-        echo '<h4>' . __( 'Redirect Login Log in reverse order', 'ultimate-member' ) . '</h4>';
+        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.0', 'ultimate-member' ) . '</h4>';
         
         if( !empty( $log )) {
 
@@ -122,10 +122,10 @@ function redirect_login_log_shortcode( $atts ) {
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'ID', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'User', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Status', 'ultimate-member' ) . '</div>';
-            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Redirect', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Redirect URL', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Provider', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Priority Role', 'ultimate-member' ) . '</div>';
-            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'wp_roles', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'WP roles', 'ultimate-member' ) . '</div>';
             echo '</div>';
 
             $time_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
