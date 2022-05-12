@@ -8,7 +8,7 @@ Last 30 redirect status items are saved in the options table with option name um
 ## Shortcode
 [redirect_login_log]
 
-The shortcode will list the login redirects with the follwing items:
+The shortcode will list the login redirects in reverse order with the following items:
 
 1. Time
 2. User ID
