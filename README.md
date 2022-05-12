@@ -1,5 +1,5 @@
 # UM Redirect Login Log
-A debug tool for failing UM Login Redirects
+A debug tool for tracing UM Login Redirects
 
 Last 30 redirect status items are saved in the options table with option name um_redirect_login_log.
 
