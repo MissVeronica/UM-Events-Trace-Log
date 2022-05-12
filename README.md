@@ -1,9 +1,7 @@
 # UM Redirect Login Log
-A debug tool for tracing UM Login Redirects
+A debug tool for tracing UM Login Redirects and all WP Redirects
 
 Last 30 redirect status items are saved in the options table with option name um_redirect_login_log.
-
-
 
 ## Shortcode
 [redirect_login_log]
@@ -18,6 +16,8 @@ The shortcode will list the login redirects in reverse order with the following 
 6. Provider
 7. Priority role
 8. Roles
+
+Reload the page with the shortcode to follow actual redirects.
 
 ## Installation
 Install by downloading the ZIP file and install as a new Plugin, 
