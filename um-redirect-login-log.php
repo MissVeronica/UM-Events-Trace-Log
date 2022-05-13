@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Redirect Login Log
  * Description:     Extension to Ultimate Member for logging all redirects during login.
- * Version:         1.1.0
+ * Version:         1.2.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -110,7 +110,7 @@ function redirect_login_log_shortcode( $atts ) {
         $log = get_option( 'um_redirect_login_log' );
 
         ob_start();
-        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.1', 'ultimate-member' ) . '</h4>';
+        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.2', 'ultimate-member' ) . '</h4>';
         
         if( !empty( $log )) {
 
@@ -135,6 +135,7 @@ function redirect_login_log_shortcode( $atts ) {
                 echo '<div style="display: table-cell;">';
                 echo date_i18n(  $time_format, $items[0] ) . '</div>';
                 unset( $items[0] );
+                if( strpos( $items[4], 'Bootstrap' ) > 0 ) $items[4] = 'WP Bootstrap';
                 foreach( $items as $item ) {
                     echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . $item . '</div>';
                 }
