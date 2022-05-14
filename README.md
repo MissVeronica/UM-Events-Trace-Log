@@ -10,7 +10,7 @@ The shortcode will list the login redirects in reverse order with the following 
 
 1. Time
 2. User ID
-3. username
+3. User Name
 4. Status
 5. Redirect URL
 6. By
