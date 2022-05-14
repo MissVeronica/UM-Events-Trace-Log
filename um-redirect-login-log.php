@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Redirect Login Log
  * Description:     Extension to Ultimate Member for logging all redirects during login.
- * Version:         1.2.0
+ * Version:         1.3.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -17,10 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'UM' ) ) return;
 
 
-add_action( 'um_user_login', 'um_user_login_trace', 9 );
-add_filter( 'x_redirect_by', 'wp_redirect_login_log', 10, 3 );
+add_action( 'um_user_login',         'um_user_login_trace', 9 );
+add_filter( 'x_redirect_by',         'wp_redirect_login_log', 10, 3 );
 add_shortcode( 'redirect_login_log', 'redirect_login_log_shortcode' );
-remove_action( 'um_user_login', 'um_user_login', 10 );
+remove_action( 'um_user_login',      'um_user_login', 10 );
 
 function um_user_login_trace( $args ) {
 
@@ -38,39 +38,39 @@ function um_user_login_trace( $args ) {
 
     // Priority redirect
     if ( ! empty( $args['redirect_to']  ) ) {
-        my_um_redirect_login_log( 'Priority redirect', $args['redirect_to'] );
+        my_um_redirect_login_log( 'UM Priority redirect', $args['redirect_to'] );
         exit( wp_safe_redirect( $args['redirect_to'] ) );
     }
 
     // Role redirect
     $after_login = um_user( 'after_login' );
     if ( empty( $after_login ) ) {
-        my_um_redirect_login_log( 'Role redirect', um_user_profile_url() );
+        my_um_redirect_login_log( 'UM Role redirect', um_user_profile_url() );
         exit( wp_redirect( um_user_profile_url() ) );
     }
 
     switch ( $after_login ) {
 
         case 'redirect_admin':
-            my_um_redirect_login_log( 'redirect_admin', admin_url() );
+            my_um_redirect_login_log( 'UM redirect_admin', admin_url() );
             exit( wp_redirect( admin_url() ) );
             break;
 
         case 'redirect_url':
-            my_um_redirect_login_log( 'redirect_url filter in', um_user( 'login_redirect_url' ) );
+            my_um_redirect_login_log( 'UM redirect_url filterin', um_user( 'login_redirect_url' ) );
             $redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
-            my_um_redirect_login_log( 'redirect_url filter out', $redirect_url );
+            my_um_redirect_login_log( 'UM redirect_url filterout', $redirect_url );
             exit( wp_redirect( $redirect_url ) );
             break;
 
         case 'refresh':
-            my_um_redirect_login_log( 'refresh', UM()->permalinks()->get_current_url() );
+            my_um_redirect_login_log( 'UM refresh', UM()->permalinks()->get_current_url() );
             exit( wp_redirect( UM()->permalinks()->get_current_url() ) );
             break;
 
         case 'redirect_profile':
         default:
-            my_um_redirect_login_log( $after_login, um_user_profile_url() );
+            my_um_redirect_login_log( 'UM ' . $after_login, um_user_profile_url() );
             exit( wp_redirect( um_user_profile_url() ) );
             break;
 	}
@@ -78,23 +78,27 @@ function um_user_login_trace( $args ) {
 
 function wp_redirect_login_log( $x_redirect_by, $status, $location ) {
 
-    my_um_redirect_login_log( 'wp_redirect', $location );
+    my_um_redirect_login_log( 'wp_redirect', $location, $x_redirect_by, $status );
 
     return $x_redirect_by;
 }
 
-function my_um_redirect_login_log( $status, $redirect ) {
+function my_um_redirect_login_log( $status, $redirect, $x_redirect_by = '', $code = '' ) {
 
     $log = get_option( 'um_redirect_login_log' );
     if( empty( $log )) $log = array();
 
-    if( isset($_GET['provider'] )) $provider = $_GET['provider']; else $provider = '';
+    $provider = '';
+    if( isset( $_GET['provider'] )) $provider = $_GET['provider'];
+    if( !empty( $x_redirect_by ))   $provider = $x_redirect_by;
+
     $log[] = array( current_time( 'timestamp' ), 
                     um_user( 'ID' ), 
                     um_user('user_login' ), 
                     $status, 
                     $redirect, 
-                    $provider,                     
+                    $provider,
+                    $code,                     
                     UM()->roles()->get_priority_user_role( um_user( 'ID' ) ),
                     um_user('wp_roles' ),
                  );
@@ -110,7 +114,7 @@ function redirect_login_log_shortcode( $atts ) {
         $log = get_option( 'um_redirect_login_log' );
 
         ob_start();
-        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.2', 'ultimate-member' ) . '</h4>';
+        echo '<h4>' . __( 'Redirect Login Log in reverse order version 1.3', 'ultimate-member' ) . '</h4>';
         
         if( !empty( $log )) {
 
@@ -122,9 +126,10 @@ function redirect_login_log_shortcode( $atts ) {
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'User', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Status', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Redirect URL', 'ultimate-member' ) . '</div>';
-            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Provider', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'By', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Code', 'ultimate-member' ) . '</div>';
             echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'Priority Role', 'ultimate-member' ) . '</div>';
-            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'WP roles', 'ultimate-member' ) . '</div>';
+            echo '<div style="display: table-cell; padding:0px 0px 0px 10px;">' . __( 'WP Roles', 'ultimate-member' ) . '</div>';
             echo '</div>';
 
             $time_format = get_option( 'time_format' );
