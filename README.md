@@ -15,7 +15,7 @@ The shortcode will list the login redirects in reverse order with the following 
 5. Redirect URL
 6. By
 7. Code
-8. Priority role
+8. Priority Role
 9. WP Roles
 
 Reload the page with the shortcode to follow actual redirects.
