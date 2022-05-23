@@ -1,4 +1,4 @@
-# UM Redirect Login Log
+# UM Redirect Login and Nonce Log
 A debug tool for tracing UM Login Redirects and all WP Redirects. Version 2.0.0 also includes tracing of UM nonces.
 
 Last redirect status and nonce items are saved in the options table with option name um_redirect_login_log.
