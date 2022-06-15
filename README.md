@@ -14,7 +14,7 @@ The shortcode will list the login redirects and nonce values in reverse order wi
 4. Status
 5. Redirect URL / Nonce values
 6. By
-7. Code
+7. HTML Code
 8. Priority Role
 9. WP Roles
 
