@@ -338,8 +338,17 @@ function redirect_login_log_shortcode( $atts ) {
                     } else {
 
                         if( strpos( $item, 'Bootstrap' ) > 0 ) $item = 'WP Bootstrap';
-                        
-                        echo '<div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( urldecode( $item )) . '</div>';
+
+                        switch( $item ) {
+                            case 'create':                    $explain = 'title="Create nonce"'; break;
+                            case 'verified 1':                $explain = 'title="Nonce generated 0-12 hours ago."'; break;
+                            case 'verified 2':                $explain = 'title="Nonce generated 12-24 hours ago."'; break;
+                            case 'UM redirect_url filterin':  $explain = 'title="Redirect URL before call to &quot;um_login_redirect_url&quot; filter"'; break;
+                            case 'UM redirect_url filterout': $explain = 'title="Redirect URL after call to &quot;um_login_redirect_url&quot; filter"'; break;
+                            case 'UM after login':            $explain = 'title="Default redirect after login"'; break;
+                            default:                          $explain = '';
+                        }
+                        echo '<div style="display: table-cell; padding:0px 0px 0px 8px;"' . $explain . '>' . esc_html( urldecode( $item )) . '</div>';
                     }
                 }
 ?>
