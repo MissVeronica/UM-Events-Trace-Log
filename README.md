@@ -19,8 +19,9 @@ The shortcode will list the login redirects and nonce values in reverse order wi
 9. WP Roles
 
 Reload the page with the shortcode to list actual redirects and nonce values.
-
-Remove the shortcode page from UM Restrictions and WP Plugin or web server caching.
+## Display failures
+1. Remove the shortcode page from UM Restrictions.
+2. Disable WP Plugin or web server caching.
 
 ## Installation
 Install by downloading the ZIP file and install as a new Plugin, 
