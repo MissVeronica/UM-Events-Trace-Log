@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Redirect Login and Nonce Trace Log
  * Description:     Extension to Ultimate Member for logging all redirects during login and UM nonce creation/verification. Settings at UM Settings -> Misc
- * Version:         2.1.0
+ * Version:         2.2.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -213,7 +213,7 @@ function um_user_login_trace( $args ) {
 
         case 'redirect_profile':
         default:
-            my_um_redirect_login_log( 'UM ' . $after_login, um_user_profile_url() );
+            my_um_redirect_login_log( 'UM after login', um_user_profile_url() );
             exit( wp_redirect( um_user_profile_url() ) );
             break;
 	}
@@ -299,7 +299,7 @@ function redirect_login_log_shortcode( $atts ) {
         if( empty( $log ) || !isset( $log['data'] )) $log = array( 'time' => array(), 'data' => array());
 
         ob_start();
-        echo '<h4>' . sprintf( __( 'Redirect Login and Nonce Trace Log in reverse order version 2.0 ( %d entries )', 'ultimate-member' ), esc_html( count( $log['time'] ))) . '</h4>';
+        echo '<h4>' . sprintf( __( 'Redirect Login and Nonce Trace Log in reverse order version 2.2 ( %d entries )', 'ultimate-member' ), esc_html( count( $log['time'] ))) . '</h4>';
 
         if( !empty( $log['data'] )) {
 
@@ -310,17 +310,15 @@ function redirect_login_log_shortcode( $atts ) {
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Status', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Redirect URL / Nonce', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'By', 'ultimate-member' ) . '</div>
-                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Code', 'ultimate-member' ) . '</div>
+                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'HTML Code', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Priority Role', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'WP Roles', 'ultimate-member' ) . '</div>
                   </div>';
 
-            $time_format = get_option( 'time_format' );
-
             foreach( $log['time'] as $key => $timestamp ) {
 
                 echo '<div style="display: table-row;">
-                        <div style="display: table-cell;" title="Seconds ' . esc_html( date_i18n(  's', $timestamp )) . '">' . esc_html( date_i18n(  $time_format, $timestamp )) . '</div>';
+                        <div style="display: table-cell;" title="Time in Hours 00-24, Minutes, Seconds">' . esc_html( date_i18n(  "H:i:s", $timestamp )) . '</div>';
 
                 foreach( $log['data'][$key] as $item ) {
 
