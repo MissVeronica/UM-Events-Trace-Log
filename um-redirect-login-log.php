@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Redirect Login and Nonce Trace Log
  * Description:     Extension to Ultimate Member for logging all redirects during login and UM nonce creation/verification. Settings at UM Settings -> Misc
- * Version:         2.0.0
+ * Version:         2.1.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -339,7 +339,7 @@ function redirect_login_log_shortcode( $atts ) {
 
                         if( strpos( $item, 'Bootstrap' ) > 0 ) $item = 'WP Bootstrap';
                         
-                        echo '<div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( $item ) . '</div>';
+                        echo '<div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( urldecode( $item )) . '</div>';
                     }
                 }
 ?>
@@ -366,7 +366,7 @@ function um_settings_structure_misc_redirect_log( $settings_structure ) {
     $settings_structure['misc']['fields'][] = array( 'id'      => 'redirect_log_max_items',
                                                      'type'    => 'text',
                                                      'label'   => __( 'Redirect Login/Nonce Log max number of log entries', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Enter the number as a single integer number (typical values between 20 and 100)', 'ultimate-member' ),
+                                                     'tooltip' => __( 'Enter the number as a single integer number (typical values between 100 and 300 with more user IDs)', 'ultimate-member' ),
                                                      'size'    => 'short' );                                                 
 
     return $settings_structure;
