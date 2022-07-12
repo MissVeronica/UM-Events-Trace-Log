@@ -1,36 +1,39 @@
 # UM Redirect Login and Nonce Log
-A debug tool for tracing UM Login Redirects and all WP Redirects. Version 2.2.0 also includes tracing of UM nonce values.
+A debug tool for tracing UM events: nonce events, redirect events, password reset events, email validation events.
 
-Last redirect status and nonce items are saved in the options table with option name um_redirect_login_log.
+Last events are saved in the options table with option name um_events_trace_log.
 
 ## Shortcode
-[redirect_login_log]
+[um_events_trace_log]
 
-The shortcode will list the login redirects and nonce values in reverse order with the following items:
+The shortcode will list the selected events in reverse order with the following items:
 
 1. Time
 2. User ID
 3. User Name
-4. Status
-5. Redirect URL / Nonce values
-6. By
-7. HTML Code
-8. Priority Role
-9. WP Roles
+4. IP
+5. Status
+6. Redirect URL / Nonce values / Reset pwd / Activation Hash
+7. Redirect by: line
+8. HTML Code
+9. Priority Role (WP Roles)
 
-Reload the page with the shortcode to list actual redirects and nonce values.
+Reload the page with the shortcode to list actual events.
 ## Display failures
 1. Remove the shortcode page from UM Restrictions.
-2. Disable WP Plugin or web server caching.
+2. Disable WP Plugin or web server caching for the shortcode page.
 
 ## Installation
-Install by downloading the ZIP file and install as a new Plugin, 
+Install by downloading the ZIP file and install as a new Plugin, which you upload in WordPress -> Plugins -> Add New -> Upload Plugin.
 
-which you upload in WordPress -> Plugins -> Add New -> Upload Plugin.
-
-Activate the Plugin: Ultimate Member - Redirect Login and Nonce Trace Log
+Activate the Plugin: Ultimate Member - Events Trace Log
 
 Settings at UM Settings -> Misc
 
-1. Redirect Login/Nonce Log User ID's
-2. Redirect Login/Nonce Log max number of log entries 
+1. Events Trace Log User ID's or @ 	
+2. Events Trace Log User IP addresses 	
+3. Events Trace Log max number of log entries 	
+4. Log nonce events 	
+5. Log redirect events 	
+6. Log password reset events 	
+7. Log email validation events
