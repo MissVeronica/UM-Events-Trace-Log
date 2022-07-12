@@ -1,4 +1,4 @@
-# UM Redirect Login and Nonce Log
+# UM Events Trace Log
 A debug tool for tracing UM events: nonce events, redirect events, password reset events, email validation events.
 
 Last events are saved in the options table with option name um_events_trace_log.
