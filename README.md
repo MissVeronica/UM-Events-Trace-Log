@@ -1,5 +1,5 @@
 # UM Events Trace Log
-A debug tool for tracing UM events: nonce events, redirect events, password reset events, email validation events.
+A debug tool for tracing UM events: nonce events, redirect events, password reset events, email validation events and login errors.
 
 Last events are saved in the options table with option name um_events_trace_log.
 
@@ -13,7 +13,7 @@ The shortcode will list the selected events in reverse order with the following 
 3. User Name
 4. IP
 5. Status
-6. Redirect URL / Nonce values / Reset pwd / Activation Hash
+6. Redirect URL / Nonce values / Reset pwd / Activation Hash / Login
 7. Redirect by: line
 8. HTML Code
 9. Priority Role (WP Roles)
@@ -35,5 +35,5 @@ Settings at UM Settings -> Misc
 3. Events Trace Log max number of log entries 	
 4. Log nonce events 	
 5. Log redirect events 	
-6. Log password reset events 	
+6. Log password reset events and login errors	
 7. Log email validation events
