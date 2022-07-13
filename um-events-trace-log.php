@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:     Ultimate Member - Events Trace Log
- * Description:     Extension to Ultimate Member for logging events like redirects during login, UM nonce creation/verification, password reset and email account verification. Settings at UM Settings -> Misc
- * Version:         3.0.0
+ * Description:     Extension to Ultimate Member for logging events like redirects during login, UM nonce creation/verification, password reset, email account verification and login errors. Settings at UM Settings -> Misc
+ * Version:         3.1.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -42,11 +42,47 @@ if( !empty( UM()->options()->get( 'events_trace_log_password' )) && isset( UM()-
     add_action(    'retrieve_password_key',           'retrieve_password_key_log', 10, 2 );
     add_filter(    'x_redirect_by',                   'wp_redirect_password_log', 10, 3 );
     add_action(    'um_after_changing_user_password', 'um_after_changing_user_password_log', 10, 1 );
+    add_filter(    'wp_authenticate_user',            'wp_authenticate_user_custom_log', 10, 2 );
+    add_action(    'wp_login_failed',                 'wp_login_failed_custom_log', 10, 2 );
 }
 
 add_filter(    'um_settings_structure', 'um_settings_structure_misc_log', 10, 1 );
 add_shortcode( 'um_events_trace_log',   'um_events_trace_log_shortcode' );
 
+
+
+
+function wp_login_failed_custom_log( $user_name, $wp_error ) {
+
+    if( empty( $user_name )) return;
+
+    my_um_events_trace_log( array(  'status'  => 'login', 
+                                    'user_id' => '', 
+                                    'info'    => 'attempt by username ' . $user_name ));
+}
+
+function wp_authenticate_user_custom_log( $user, $user_password ) {
+
+    if( is_wp_error( $user )) {
+
+        $msg = $user->get_error_code();
+        switch( $msg ) {
+            case 'incorrect_password':  
+            case 'user_password':       $msg .= '=' . $user_password; break;
+
+            case 'invalid_email':
+            case 'empty_password':
+            case 'empty_username':
+            case 'invalid_username':    break;
+
+            default:                    $msg = 'unknown error code=' . $msg;
+        }
+        my_um_events_trace_log( array(  'status'  => 'login', 
+                                        'user_id' => '', 
+                                        'info'    => $msg ));
+    }
+    return $user;
+}
 
 /**
  * Password page form
@@ -835,7 +871,7 @@ function um_events_trace_log_shortcode( $atts ) {
                              '308' => __( 'Permanent Redirect   The requested page has moved permanently to a new URL', 'ultimate-member' ));
 
         ob_start();
-        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.0') . '</h4>';
+        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.1') . '</h4>';
         echo '<h4>' . sprintf( __( 'Display of last %d log entries in reverse order %s', 'ultimate-member' ), esc_html( count( $log['time'] )), esc_html( date_i18n( "Y-m-d H:i:s", current_time( 'timestamp' ) ))) . '</h4>';
         echo '<h5>' . __( 'If refresh of this page will not display new values during your test: Turn off WP Plugin and Web Hosting caching for the UM Pages and Clear Browser cache.', 'ultimate-member' ) . '</h5>';
 
@@ -847,8 +883,8 @@ function um_events_trace_log_shortcode( $atts ) {
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'User', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'IP', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Status', 'ultimate-member' ) . '</div>
-                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Redirect URL / Nonce / Reset pwd / Activation Hash', 'ultimate-member' ) . '</div>
-                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Redirect by: line', 'ultimate-member' ) . '</div>
+                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Redirect URL / Nonce / Reset pwd / Activation Hash / Login', 'ultimate-member' ) . '</div>
+                  <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Redirect by script: line', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'HTML Code', 'ultimate-member' ) . '</div>
                   <div style="display: table-cell; padding:0px 0px 0px 8px;">' . __( 'Priority Role', 'ultimate-member' ) . '</div>
                   </div>';
@@ -862,6 +898,7 @@ function um_events_trace_log_shortcode( $atts ) {
 
                 switch( $item['status'] ) {
                     case 'create':          $action = 'title="Create a page nonce"'; break;
+                    case 'login':           $action = 'title="Username or password invalid at login"'; break;
                     case 'verified 12':     $action = 'title="Nonce OK, generated 0-12 hours ago."'; break;
                     case 'verified 24':     $action = 'title="Nonce OK, generated 12-24 hours ago."'; break;
                     case 'reject':          $action = 'title="Nonce failed (older than 24 hours). Do you have any WP plugin or web hosting caching active?"'; break;
@@ -920,6 +957,10 @@ function um_events_trace_log_shortcode( $atts ) {
                                                       <div style="display: table-cell;"></div>';
                                             break;
 
+                    case 'login':           $line .= '<div style="display: table-cell; padding:0px 0px 0px 8px;" title="">' . esc_html( $item['info'] ) . '</div>
+                                                      <div style="display: table-cell;"></div>
+                                                      <div style="display: table-cell;"></div>';
+                                            break;
                 } 
 
                 $line .= '<div style="display: table-cell; padding:0px 0px 0px 8px;" title="All WP Roles: ' . esc_html( $item['wp_roles'] ) . '">' . esc_html( $item['um_role'] ) . '</div>';
@@ -968,7 +1009,7 @@ function um_settings_structure_misc_log( $settings_structure ) {
 
     $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_password',
                                                      'type'    => 'checkbox',
-                                                     'label'   => __( 'Log password reset events', 'ultimate-member' ),
+                                                     'label'   => __( 'Log password reset events and login errors', 'ultimate-member' ),
                                                      'tooltip' => __( 'Tick to activate this event log', 'ultimate-member' ));
 
     $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_validation',
