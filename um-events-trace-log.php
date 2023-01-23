@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Events Trace Log
  * Description:     Extension to Ultimate Member for logging events like redirects during login, UM nonce creation/verification, password reset, email account verification and login errors. Settings at UM Settings -> Misc
- * Version:         3.1.0
+ * Version:         3.2.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -58,7 +58,7 @@ function wp_login_failed_custom_log( $user_name, $wp_error ) {
 
     my_um_events_trace_log( array(  'status'  => 'login', 
                                     'user_id' => '', 
-                                    'info'    => 'attempt by username ' . $user_name ));
+                                    'info'    => 'by username ' . $user_name ));
 }
 
 function wp_authenticate_user_custom_log( $user, $user_password ) {
@@ -622,7 +622,7 @@ if ( ! function_exists( 'wp_create_nonce' ) && !empty( UM()->options()->get( 'ev
 	}
 endif;
 
-if ( ! function_exists( 'wp_nonce_tick' && !empty( UM()->options()->get( 'events_trace_log_nonce' )))) :
+if ( ! function_exists( 'wp_nonce_tick' ) && ! empty( UM()->options()->get( 'events_trace_log_nonce' ))) {
 	/**
 	 * Returns the time-dependent variable for nonce creation.
 	 *
@@ -633,6 +633,7 @@ if ( ! function_exists( 'wp_nonce_tick' && !empty( UM()->options()->get( 'events
 	 *
 	 * @return float Float value rounded up to the next highest integer.
 	 */
+    
 	function wp_nonce_tick() {
 		/**
 		 * Filters the lifespan of nonces in seconds.
@@ -645,7 +646,7 @@ if ( ! function_exists( 'wp_nonce_tick' && !empty( UM()->options()->get( 'events
 
 		return ceil( time() / ( $nonce_life / 2 ) );
 	}
-endif;
+}
 
 function wp_verify_nonce_failed_log( $nonce, $action, $user, $token ) {
 
@@ -871,7 +872,7 @@ function um_events_trace_log_shortcode( $atts ) {
                              '308' => __( 'Permanent Redirect   The requested page has moved permanently to a new URL', 'ultimate-member' ));
 
         ob_start();
-        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.1') . '</h4>';
+        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.2.0') . '</h4>';
         echo '<h4>' . sprintf( __( 'Display of last %d log entries in reverse order %s', 'ultimate-member' ), esc_html( count( $log['time'] )), esc_html( date_i18n( "Y-m-d H:i:s", current_time( 'timestamp' ) ))) . '</h4>';
         echo '<h5>' . __( 'If refresh of this page will not display new values during your test: Turn off WP Plugin and Web Hosting caching for the UM Pages and Clear Browser cache.', 'ultimate-member' ) . '</h5>';
 
