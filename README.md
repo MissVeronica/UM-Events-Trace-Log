@@ -1,7 +1,7 @@
 # UM Events Trace Log
 A debug tool for tracing UM events: nonce events, redirect events, password reset events, email validation events and login errors.
 
-Last events are saved in the options table with option name um_events_trace_log.
+Last events are saved in the options table with option name um_events_trace_log and can be displayed by the shortcode.
 
 ## Shortcode
 [um_events_trace_log]
@@ -22,7 +22,8 @@ Reload the page with the shortcode to list actual events.
 ## Display failures
 1. Remove the shortcode page from UM Restrictions.
 2. Disable WP Plugin or web server caching for the shortcode page.
-
+## Updates
+Version 3.2.0 Fixed ref to function wp_nonce_tick
 ## Installation
 Install by downloading the ZIP file and install as a new Plugin, which you upload in WordPress -> Plugins -> Add New -> Upload Plugin.
 
