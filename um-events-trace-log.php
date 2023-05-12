@@ -872,7 +872,7 @@ function um_events_trace_log_shortcode( $atts ) {
                              '308' => __( 'Permanent Redirect   The requested page has moved permanently to a new URL', 'ultimate-member' ));
 
         ob_start();
-        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.2.0') . '</h4>';
+        echo '<h4>' . sprintf( __( 'UM Events Trace Log, version %s', 'ultimate-member' ), '3.3.0') . '</h4>';
         echo '<h4>' . sprintf( __( 'Display of last %d log entries in reverse order %s', 'ultimate-member' ), esc_html( count( $log['time'] )), esc_html( date_i18n( "Y-m-d H:i:s", current_time( 'timestamp' ) ))) . '</h4>';
         echo '<h5>' . __( 'If refresh of this page will not display new values during your test: Turn off WP Plugin and Web Hosting caching for the UM Pages and Clear Browser cache.', 'ultimate-member' ) . '</h5>';
 
