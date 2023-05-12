@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Events Trace Log
  * Description:     Extension to Ultimate Member for logging events like redirects during login, UM nonce creation/verification, password reset, email account verification and login errors. Settings at UM Settings -> Misc
- * Version:         3.2.0
+ * Version:         3.3.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -912,7 +912,7 @@ function um_events_trace_log_shortcode( $atts ) {
 
                 $line = '<div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( $item['user_id'] ) . '</div>
                          <div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( $item['user_login'] ) . '</div>
-                         <div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( $item['IP'] ) . '</div>                    
+                         <div style="display: table-cell; padding:0px 0px 0px 8px;">' . esc_html( substr_replace( $item['IP'], 'X', 0, 5 )) . '</div>                    
                          <div style="display: table-cell; padding:0px 0px 0px 8px;" ' . $action . '>' . esc_html( $item['status'] ) . '</div>';
 
                 switch( $item['status'] ) {
