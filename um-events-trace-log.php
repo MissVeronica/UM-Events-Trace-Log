@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Events Trace Log
  * Description:     Extension to Ultimate Member for logging events like redirects during login, UM nonce creation/verification, password reset, email account verification and login errors. Settings at UM Settings -> Misc
- * Version:         3.3.0
+ * Version:         3.4.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -10,7 +10,7 @@
  * Author URI:      https://github.com/MissVeronica
  * Text Domain:     ultimate-member
  * Domain Path:     /languages
- * UM version:      2.4.1
+ * UM version:      2.8.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; 
@@ -741,11 +741,9 @@ function my_um_trace_events_prelog( $status, $redirect ) {
 
 function wp_redirect_login_log( $x_redirect_by, $status, $location ) {
 
-
-
-    my_um_events_trace_log( array( 'status'      => 'wp_redirect', 
-                                   'redirect'    => $location, 
-                                   'redirect_by' => wp_redirect_by_login_log(), 
+    my_um_events_trace_log( array( 'status'      => 'wp_redirect',
+                                   'redirect'    => $location,
+                                   'redirect_by' => wp_redirect_by_login_log(),
                                    'code'        => $status ));
 
     return $x_redirect_by;
@@ -753,8 +751,8 @@ function wp_redirect_login_log( $x_redirect_by, $status, $location ) {
 
 function um_after_changing_user_password_log( $user_id ) {
 
-    my_um_events_trace_log( array( 'status'  => 'reset_pwd', 
-                                   'user_id' => $user_id, 
+    my_um_events_trace_log( array( 'status'  => 'reset_pwd',
+                                   'user_id' => $user_id,
                                    'info'    => 'Password updated by user, the hash now obsolete.' ));
 }
 
@@ -860,7 +858,7 @@ function um_events_trace_log_shortcode( $atts ) {
     if( current_user_can( 'administrator' )) {
 
         $log = get_option( 'um_events_trace_log' );
-        if( empty( $log ) || !isset( $log['data'] )) $log = array( 'time' => array(), 
+        if( empty( $log ) || !isset( $log['data'] )) $log = array( 'time' => array(),
                                                                    'data' => array());
 
         $html_codes = array( '300' => __( 'Multiple Choices 	A link list. The user can select a link and go to that location. Maximum five addresses', 'ultimate-member' ),  
@@ -949,7 +947,7 @@ function um_events_trace_log_shortcode( $atts ) {
                     case 'redirect_url':    $line .= '<div style="display: table-cell; padding:0px 0px 0px 8px;" title="">' . esc_html( $item['redirect'] ) . '</div>
                                                       <div style="display: table-cell; padding:0px 0px 0px 8px;" title="">' . esc_html( $item['redirect_by'] ) . '</div>
                                                       <div style="display: table-cell;"></div>';
-                                            break;                   
+                                            break;
 
                     case 'unverified':
                     case 'verified 12':
@@ -981,41 +979,64 @@ function um_events_trace_log_shortcode( $atts ) {
 
 function um_settings_structure_misc_log( $settings_structure ) {
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_user_id',
-                                                     'type'    => 'text',
-                                                     'label'   => __( "Events Trace Log User ID's or @", 'ultimate-member' ),
-                                                     'tooltip' => __( "Enter comma separated User ID's as integer numbers or @ for all user ID's. Not logged in users (without user ID) will always be logged.", 'ultimate-member' ),
-                                                     'size'    => 'short' );
-                                                     
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_user_ip',
-                                                     'type'    => 'text',
-                                                     'label'   => __( "Events Trace Log User IP addresses", 'ultimate-member' ),
-                                                     'tooltip' => __( "Enter IP addresses comma separated or leave this field empty.", 'ultimate-member' ));
+    if ( ! isset( $settings_structure['misc']['title'] )) {
+        $settings_structure['misc']['title']                 = __( 'Misc', 'ultimate-member' );
+        $settings_structure['misc']['sections']['']['title'] = __( 'Old UM Miscellaneous tab now only used for some free Plugins (from UM 2.8.3)', 'ultimate-member' );
+    }
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_max_items',
-                                                     'type'    => 'text',
-                                                     'label'   => __( 'Events Trace Log max number of log entries', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Enter a single integer number (typical values between 100 and 300 with more user ID\'s)', 'ultimate-member' ),
-                                                     'size'    => 'short' );                                                 
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['title']       = __( 'Events Trace Log', 'ultimate-member' );
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['description'] = __( 'Plugin version 3.4.0 - tested with UM 2.8.3', 'ultimate-member' );
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_nonce',
-                                                     'type'    => 'checkbox',
-                                                     'label'   => __( 'Log nonce events', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Tick to activate this event log', 'ultimate-member' ));  
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_user_id',
+                                                     'type'        => 'text',
+                                                     'label'       => __( "Events Trace Log User ID's or @", 'ultimate-member' ),
+                                                     'description' => __( "Enter comma separated User ID's as integer numbers or @ for all user ID's. Not logged in users (without user ID) will always be logged.", 'ultimate-member' ),
+                                                     'size'        => 'short' 
+                                                    );
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_redirect',
-                                                     'type'    => 'checkbox',
-                                                     'label'   => __( 'Log redirect events', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Tick to activate this event log', 'ultimate-member' ));
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_user_ip',
+                                                     'type'        => 'text',
+                                                     'label'       => __( "Events Trace Log User IP addresses", 'ultimate-member' ),
+                                                     'description' => __( "Enter IP addresses comma separated or leave this field empty.", 'ultimate-member' )
+                                                    );
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_password',
-                                                     'type'    => 'checkbox',
-                                                     'label'   => __( 'Log password reset events and login errors', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Tick to activate this event log', 'ultimate-member' ));
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_max_items',
+                                                     'type'        => 'text',
+                                                     'label'       => __( 'Events Trace Log max number of log entries', 'ultimate-member' ),
+                                                     'description' => __( 'Enter a single integer number (typical values between 100 and 300 with more user ID\'s)', 'ultimate-member' ),
+                                                     'size'        => 'short' 
+                                                    );
 
-    $settings_structure['misc']['fields'][] = array( 'id'      => 'events_trace_log_validation',
-                                                     'type'    => 'checkbox',
-                                                     'label'   => __( 'Log email validation events', 'ultimate-member' ),
-                                                     'tooltip' => __( 'Tick to activate this event log', 'ultimate-member' ));
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_nonce',
+                                                     'type'        => 'checkbox',
+                                                     'label'       => __( 'Log nonce events', 'ultimate-member' ),
+                                                     'description' => __( 'Tick to activate this event log', 'ultimate-member' )
+                                                    );  
+
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_redirect',
+                                                     'type'        => 'checkbox',
+                                                     'label'       => __( 'Log redirect events', 'ultimate-member' ),
+                                                     'description' => __( 'Tick to activate this event log', 'ultimate-member' )
+                                                    );
+
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_password',
+                                                     'type'        => 'checkbox',
+                                                     'label'       => __( 'Log password reset events and login errors', 'ultimate-member' ),
+                                                     'description' => __( 'Tick to activate this event log', 'ultimate-member' )
+                                                    );
+
+    $settings_structure['misc']['sections']['']['form_sections']['events_trace_log']['fields'][] = array(
+                                                     'id'          => 'events_trace_log_validation',
+                                                     'type'        => 'checkbox',
+                                                     'label'       => __( 'Log email validation events', 'ultimate-member' ),
+                                                     'description' => __( 'Tick to activate this event log', 'ultimate-member' )
+                                                    );
     return $settings_structure;
 }
+
