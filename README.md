@@ -19,11 +19,16 @@ The shortcode will list the selected events in reverse order with the following 
 9. Priority Role (WP Roles)
 
 Reload the page with the shortcode to list actual events.
+
 ## Display failures
 1. Remove the shortcode page from UM Restrictions.
 2. Disable WP Plugin or web server caching for the shortcode page.
+
 ## Updates
-Version 3.2.0 Fixed ref to function wp_nonce_tick
+1. Version 3.2.0 Fixed ref to function wp_nonce_tick
+2. Version 3.4.0 Tested with UM 2.8.3
+
+
 ## Installation
 Install by downloading the ZIP file and install as a new Plugin, which you upload in WordPress -> Plugins -> Add New -> Upload Plugin.
 
