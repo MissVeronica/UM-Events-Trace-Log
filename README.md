@@ -26,7 +26,7 @@ Reload the page with the shortcode to list actual events.
 
 ## Updates
 1. Version 3.2.0 Fixed ref to function wp_nonce_tick
-2. Version 3.4.0 Tested with UM 2.8.3
+2. Version 3.4.0 Updated for UM 2.8.3
 
 
 ## Installation
